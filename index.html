@@ -1,0 +1,336 @@
+```html
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SFX WOUND MAKEUP & QUICK SKETCH - Digital Menu</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt & Creepster -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Prompt:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        blood: {
+                            800: '#5A0000',
+                            600: '#8B0000',
+                            500: '#B22222',
+                            400: '#DC143C',
+                            glow: '#FF2A2A',
+                        },
+                        darkness: {
+                            900: '#0B0C10',
+                            800: '#15171E',
+                            700: '#1F222D',
+                            600: '#2A2E3D',
+                        },
+                        gold: {
+                            DEFAULT: '#D4AF37',
+                            hover: '#FFD700',
+                        }
+                    },
+                    fontFamily: {
+                        prompt: ['Prompt', 'sans-serif'],
+                        creepy: ['Creepster', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Prompt', sans-serif;
+            background-color: #0B0C10;
+            color: #E0E0E0;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Glowing Effects */
+        .blood-glow {
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.4);
+        }
+        .blood-glow-lg {
+            box-shadow: 0 0 25px rgba(220, 20, 60, 0.6);
+        }
+        .text-glow {
+            text-shadow: 0 0 8px rgba(255, 42, 42, 0.7);
+        }
+        .text-creepy-glow {
+            text-shadow: 0 0 12px rgba(139, 0, 0, 0.9), 0 0 20px rgba(255, 42, 42, 0.5);
+        }
+
+        /* Smooth Hide/Show Scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Animated pulse border */
+        @keyframes pulse-border {
+            0%, 100% { border-color: rgba(220, 20, 60, 0.8); }
+            50% { border-color: rgba(212, 175, 55, 0.8); }
+        }
+        .pulse-border-glow {
+            animation: pulse-border 2.5s infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen pb-24 text-gray-100 selection:bg-blood-600 selection:text-white">
+
+    <!-- TOP HEADER / BOOTH BANNER -->
+    <header class="relative overflow-hidden bg-gradient-to-b from-darkness-900 via-darkness-800 to-blood-800/40 border-b border-blood-600/40 pt-6 pb-6 px-4 text-center">
+        <!-- Background Blood Splatter / Spooky SVG Backdrop -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none flex items-center justify-center">
+            <svg class="w-full h-full text-blood-400" fill="currentColor" viewBox="0 0 100 100">
+                <path d="M10,30 Q30,5 50,30 T90,30 Q70,90 50,70 T10,30 Z"/>
+            </svg>
+        </div>
+
+        <div class="max-w-md mx-auto relative z-10">
+            <!-- Top Bar Badges -->
+            <div class="flex items-center justify-between text-xs mb-3 px-2 text-gray-400">
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-darkness-700 border border-blood-600/30 text-blood-400 font-semibold">
+                    <i class="fa-solid fa-location-dot"></i> ช่างชุ่ย Creative Park
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-darkness-700 border border-gold/30 text-gold font-semibold">
+                    <i class="fa-solid fa-clock"></i> 17:00 - 24:00 น.
+                </span>
+            </div>
+
+            <!-- Main Title & Logo -->
+            <div class="relative inline-block cursor-pointer" id="headerLogo" onclick="triggerSecretClick()">
+                <h1 class="font-creepy text-3xl sm:text-4xl tracking-wider text-blood-400 text-creepy-glow transition-transform active:scale-95">
+                    SFX WOUND MAKEUP
+                </h1>
+                <p class="font-semibold text-gold tracking-widest text-xs uppercase mt-0.5">& QUICK SKETCH ON WOOD</p>
+            </div>
+            
+            <p class="text-xs text-gray-300 mt-2 font-light max-w-xs mx-auto">
+                แต่งแผลสด SFX สยองขวัญระดับมืออาชีพ & ภาพพอร์ตเทรตวาดสดบนกระดานไม้ที่ระลึก
+            </p>
+
+            <!-- Secret Owner Toggle Button (Discrete Icon) -->
+            <button id="ownerToggleBtn" onclick="toggleOwnerMode()" class="mt-3 px-3 py-1 text-xs rounded-full bg-darkness-700/80 border border-gold/40 text-gold hover:bg-gold hover:text-black transition-all flex items-center gap-1.5 mx-auto">
+                <i class="fa-solid fa-user-gear"></i> <span id="ownerBtnText">โหมดสลับ (ลูกค้า)</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- OWNER MODE PANEL (Hidden by Default) -->
+    <div id="ownerPanel" class="hidden bg-darkness-800 border-y-2 border-gold p-4 max-w-md mx-auto my-2 text-xs shadow-2xl relative">
+        <div class="flex items-center justify-between pb-2 mb-3 border-b border-gray-700">
+            <span class="font-bold text-gold text-sm flex items-center gap-1.5">
+                <i class="fa-solid fa-crown text-yellow-400"></i> แผงควบคุมเจ้าของร้าน (Owner Quick Tools)
+            </span>
+            <button onclick="toggleOwnerMode()" class="text-gray-400 hover:text-white">
+                <i class="fa-solid fa-xmark text-sm"></i>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mb-3">
+            <!-- Quick Calculator -->
+            <div class="bg-darkness-900 p-2.5 rounded-lg border border-gray-700">
+                <p class="font-semibold text-gray-300 mb-1"><i class="fa-solid fa-calculator text-blood-400"></i> คำนวณราคารวม</p>
+                <div class="space-y-1">
+                    <div class="flex justify-between text-gray-400">
+                        <span>รายการแผล:</span>
+                        <select id="calcBasePrice" onchange="updateCalcTotal()" class="bg-darkness-700 text-white rounded px-1 py-0.5 text-xs border border-gray-600">
+                            <option value="0">เลือกรายการ...</option>
+                            <option value="69">แผลเล็ก (฿69)</option>
+                            <option value="129">แผลเย็บ (฿129)</option>
+                            <option value="199">แผลฉีก (฿199)</option>
+                            <option value="299">แผลอสูรกาย (฿299)</option>
+                            <option value="249">Quick Sketch (฿249)</option>
+                            <option value="399">Combo สุดคุ้ม (฿399)</option>
+                        </select>
+                    </div>
+                    <div class="text-[11px] text-gray-400 flex flex-col gap-0.5 mt-1">
+                        <label class="flex items-center gap-1">
+                            <input type="checkbox" id="add1" value="20" onchange="updateCalcTotal()" class="accent-blood-600"> เลือดเยิ้ม (+฿20)
+                        </label>
+                        <label class="flex items-center gap-1">
+                            <input type="checkbox" id="add2" value="30" onchange="updateCalcTotal()" class="accent-blood-600"> ด้าย/แม็ก (+฿30)
+                        </label>
+                        <label class="flex items-center gap-1">
+                            <input type="checkbox" id="add3" value="30" onchange="updateCalcTotal()" class="accent-blood-600"> รอยช้ำ (+฿30)
+                        </label>
+                    </div>
+                    <div class="pt-1.5 border-t border-gray-800 flex justify-between font-bold text-sm text-gold">
+                        <span>ยอดสุทธิ:</span>
+                        <span id="calcTotalResult">฿0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Queue & Time Estimator -->
+            <div class="bg-darkness-900 p-2.5 rounded-lg border border-gray-700 flex flex-col justify-between">
+                <div>
+                    <p class="font-semibold text-gray-300 mb-1"><i class="fa-solid fa-hourglass-half text-gold"></i> ประมาณเวลารอคิว</p>
+                    <div class="flex items-center gap-2 my-2">
+                        <span class="text-gray-400">จำนวนคิว:</span>
+                        <input type="number" id="queueCount" value="2" min="0" onchange="updateQueueTime()" oninput="updateQueueTime()" class="w-12 bg-darkness-700 text-white rounded px-2 py-0.5 text-center border border-gray-600 text-xs font-bold">
+                        <span class="text-gray-400">คิว</span>
+                    </div>
+                </div>
+                <div class="p-1.5 bg-blood-800/40 rounded border border-blood-600/50 text-center">
+                    <p class="text-[10px] text-gray-300">เวลารอโดยประมาณ</p>
+                    <p class="text-sm font-extrabold text-blood-400" id="queueTimeResult">~15 - 20 นาที</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-[11px] text-gray-400 bg-darkness-700/50 p-2 rounded flex items-center justify-between">
+            <span><i class="fa-solid fa-lightbulb text-gold"></i> ทิป: กดค้างที่ชื่อร้านเพื่อเปิด/ปิดโหมดนี้ได้ตลอดเวลา</span>
+            <button onclick="clearCalc()" class="text-blood-400 underline hover:text-white">รีเซ็ตคำนวณ</button>
+        </div>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-md mx-auto px-3 pt-4">
+
+        <!-- CATEGORY / FILTER TABS -->
+        <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-3 mb-2 sticky top-0 bg-darkness-900/90 backdrop-blur-md py-2 z-20">
+            <button onclick="filterMenu('all')" id="tab-all" class="filter-tab active px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-blood-600 text-white blood-glow">
+                ทั้งหมด
+            </button>
+            <button onclick="filterMenu('small')" id="tab-small" class="filter-tab px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-darkness-700 text-gray-300 border border-gray-700 hover:border-blood-500">
+                ⚡ แผลเร็ว / เล็ก
+            </button>
+            <button onclick="filterMenu('large')" id="tab-large" class="filter-tab px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-darkness-700 text-gray-300 border border-gray-700 hover:border-blood-500">
+                💀 แผลใหญ่ / สยอง
+            </button>
+            <button onclick="filterMenu('sketch')" id="tab-sketch" class="filter-tab px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all bg-darkness-700 text-gray-300 border border-gray-700 hover:border-gold">
+                🎨 วาดไม้ / Combo
+            </button>
+        </div>
+
+        <!-- SPECIAL PROMO / COMBO BANNER -->
+        <div class="mb-5 bg-gradient-to-r from-blood-800/80 via-darkness-800 to-darkness-800 p-3.5 rounded-xl border border-gold/40 pulse-border-glow shadow-lg relative overflow-hidden cursor-pointer" onclick="openItemModal(5)">
+            <div class="absolute -right-4 -bottom-4 text-gold/10 text-7xl font-creepy pointer-events-none">HOT</div>
+            <div class="flex items-center gap-3">
+                <div class="w-14 h-14 rounded-lg bg-darkness-900 border border-gold/50 flex-shrink-0 flex items-center justify-center text-gold text-2xl">
+                    <i class="fa-solid fa-palette"></i>
+                </div>
+                <div>
+                    <div class="inline-block bg-gold text-black text-[10px] font-extrabold px-2 py-0.5 rounded-full mb-0.5 uppercase">
+                        SPECIAL COMBO PACK
+                    </div>
+                    <h3 class="font-bold text-sm text-white flex items-center gap-1">
+                        แต่งแผล SFX + ภาพวาด Quick Sketch ไม้ A5
+                    </h3>
+                    <p class="text-xs text-gray-300 mt-0.5">
+                        แต่งแผลผีสยองขวัญ พร้อมรับภาพวาดไม้พอร์ตเทรตกลับบ้านเป็นของที่ระลึก
+                    </p>
+                    <div class="text-xs font-extrabold text-gold mt-1">
+                        เริ่มต้นเพียง ฿299 <span class="text-[10px] text-gray-400 line-through">฿349</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MENU ITEMS GRID -->
+        <div class="space-y-4" id="menuContainer">
+
+            <!-- ITEM 1: แผลสดขนาดเล็ก -->
+            <div class="menu-item small bg-darkness-800 rounded-xl overflow-hidden border border-gray-800 hover:border-blood-600/50 transition-all shadow-md" data-category="small">
+                <div class="flex flex-col sm:flex-row">
+                    <!-- SVG Visual Illustration -->
+                    <div class="sm:w-32 h-36 sm:h-auto bg-darkness-900 relative flex items-center justify-center p-2 border-b sm:border-b-0 sm:border-r border-gray-800">
+                        <svg class="w-full h-full max-h-28 text-blood-500" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Skin background -->
+                            <rect width="200" height="150" rx="10" fill="#2D211E"/>
+                            <!-- Cut line -->
+                            <path d="M 40 75 Q 100 65 160 75" stroke="#100505" stroke-width="8" stroke-linecap="round"/>
+                            <path d="M 45 75 Q 100 67 155 75" stroke="#8B0000" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M 60 74 L 140 74" stroke="#DC143C" stroke-width="2"/>
+                            <!-- Blood drops -->
+                            <path d="M 90 75 Q 92 100 88 110 Q 86 115 90 115 Q 94 115 92 110 Z" fill="#DC143C"/>
+                            <circle cx="130" cy="85" r="3" fill="#8B0000"/>
+                        </svg>
+                        <span class="absolute top-2 left-2 bg-blood-600/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            ทำไว 3-5 นาที
+                        </span>
+                    </div>
+                    <!-- Details -->
+                    <div class="p-3.5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-base text-white">1. แผลสดขนาดเล็ก (Small Cut)</h3>
+                                <span class="font-extrabold text-blood-400 text-sm bg-blood-800/30 px-2 py-0.5 rounded border border-blood-600/40">
+                                    ฿50 - ฿89
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-300 mt-1">
+                                รอยโดนมีดบาด แผลขีดข่วน หรือแผลแตกเล็กๆ บริเวณโหนกแก้ม หน้าผาก หรือข้อมือ
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-[11px] text-gray-400 mt-2">
+                                <span><i class="fa-solid fa-ruler-horizontal text-gold"></i> 0.5-1 x 3-5 ซม.</span>
+                                <span><i class="fa-solid fa-wand-magic-sparkles text-gold"></i> Scar Wax + Blood Gel</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 mt-3 pt-2 border-t border-gray-800">
+                            <button onclick="openItemModal(1)" class="flex-1 py-1.5 px-3 rounded-lg bg-darkness-700 text-xs font-semibold text-gray-200 hover:bg-darkness-600 transition-colors text-center">
+                                ดูรายละเอียด
+                            </button>
+                            <button onclick="selectForQueue('1. แผลสดขนาดเล็ก', '฿50 - ฿89')" class="py-1.5 px-3 rounded-lg bg-blood-600 text-xs font-semibold text-white hover:bg-blood-500 transition-colors text-center blood-glow">
+                                สนใจทำแผลนี้
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ITEM 2: แผลสดมีรอยเย็บ / รอยแม็ก -->
+            <div class="menu-item small bg-darkness-800 rounded-xl overflow-hidden border border-gray-800 hover:border-blood-600/50 transition-all shadow-md" data-category="small">
+                <div class="flex flex-col sm:flex-row">
+                    <!-- SVG Visual Illustration -->
+                    <div class="sm:w-32 h-36 sm:h-auto bg-darkness-900 relative flex items-center justify-center p-2 border-b sm:border-b-0 sm:border-r border-gray-800">
+                        <svg class="w-full h-full max-h-28" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect width="200" height="150" rx="10" fill="#2D211E"/>
+                            <!-- Cut -->
+                            <path d="M 30 75 Q 100 70 170 75" stroke="#5A0000" stroke-width="10" stroke-linecap="round"/>
+                            <path d="M 35 75 Q 100 72 165 75" stroke="#B22222" stroke-width="5"/>
+                            <!-- Stitches -->
+                            <path d="M 50 60 L 50 90 M 80 58 L 80 92 M 110 60 L 110 90 M 140 58 L 140 92" stroke="#111" stroke-width="3.5" stroke-linecap="round"/>
+                            <!-- Bruise/Swelling -->
+                            <ellipse cx="100" cy="75" rx="70" ry="25" fill="#4A154B" opacity="0.3"/>
+                        </svg>
+                        <span class="absolute top-2 left-2 bg-blood-600/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            ยอดฮิตวัยรุ่น
+                        </span>
+                    </div>
+                    <!-- Details -->
+                    <div class="p-3.5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start">
+                                <h3 class="font-bold text-base text-white">2. แผลสดมีรอยเย็บ / รอยแม็ก</h3>
+                                <span class="font-extrabold text-blood-400 text-sm bg-blood-800/30 px-2 py-0.5 rounded border border-blood-600/40">
+                                    ฿99 - ฿159
+                                </span>
+                            </div>
+                            <p class="text-xs text-gray-300 mt-1">
+                                แผลผ่าตัดสดสยองขวัญ เย็บด้วยด้ายหนาหรือลวดแม็กพลาสติก พร้อมแต่งรอยช้ำอักเสบขอบแผล
+                            </p>
+                            <div class="flex flex-wrap gap-2 text-[11px] text-gray-400 mt-2">
+                                <span><i class="fa-solid fa-ruler-horizontal text-gold"></i> 1-2 x 6-8 ซม.</span>
+                                <span><i class="fa-solid fa-clock text-gold"></i> 5-8 นาที</span>
+                            </div>
+                        </div>
+                        <div class="flex gap-2 mt-3 pt-2 border-t border-gray-800">
+                            <button onclick="openItemModal(2)" class="flex-1 py-1.5 px-3 rounded-lg bg-darkness-700 text-xs font-semibold text-gray-200 hover:bg-darkness-600 transition-colors text-center">
+                                ดูรายละเอียด
+                            </button>
+                            <button onclick="sel
